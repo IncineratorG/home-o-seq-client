@@ -3,6 +3,7 @@ export class FirebasePaths {
     TEST: 'TEST',
     CLIENT_REQUEST: 'CLIENT_REQUEST',
     SERVER_RESPONSE: 'SERVER_RESPONSE',
+    SERVER_NOTIFICATION: 'SERVER_NOTIFICATION',
   };
 
   static get({pathType}) {
@@ -17,6 +18,10 @@ export class FirebasePaths {
 
       case this.type.SERVER_RESPONSE: {
         return '/homeoseq/server/responses';
+      }
+
+      case this.type.SERVER_NOTIFICATION: {
+        return '/homeoseq/server/notifications';
       }
 
       default: {

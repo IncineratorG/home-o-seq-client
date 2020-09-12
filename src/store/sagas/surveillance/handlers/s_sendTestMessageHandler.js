@@ -8,7 +8,11 @@ function* s_sendTestMessageHandler(action) {
   try {
     const systemService = Services.get(Services.serviceTypes.SURVEILLANCE);
 
-    yield call(systemService.sendTestMessage);
+    yield call(systemService.runLongRunningTask);
+
+    SystemEventsHandler.onInfo({
+      info: 's_sendTestMessageHandler()->CALL_FINISHED',
+    });
   } catch (e) {
     SystemEventsHandler.onError({
       err: 's_sendTestMessageHandler()->ERROR: ' + e,

@@ -6,13 +6,23 @@ export class SurveillanceCommunicationManager {
 
   constructor() {
     this.#communicationBridge = new FirebaseCommunicationBridge();
+
+    const responseHandler = (response) => {
+      SystemEventsHandler.onInfo({
+        info: 'SurveillanceCommunicationManager->ON_RESPONSE: ' + response,
+      });
+    };
+
+    this.#communicationBridge.onResponse({handler: responseHandler});
   }
 
-  async sendTestMessage() {
+  async sendRequest({request}) {
     SystemEventsHandler.onInfo({
-      info: 'SurveillanceCommunicationManager->sendTestMessage()',
+      info:
+        'SurveillanceCommunicationManager->sendRequest(): ' +
+        JSON.stringify(request),
     });
 
-    await this.#communicationBridge.send();
+    // await this.#communicationBridge.sendRequest();
   }
 }
