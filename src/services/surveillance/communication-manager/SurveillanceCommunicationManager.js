@@ -3,26 +3,64 @@ import {FirebaseCommunicationBridge} from '../communication-bridge/firebase-comm
 
 export class SurveillanceCommunicationManager {
   #communicationBridge;
+  #requestsUuidSet = new Set();
 
   constructor() {
     this.#communicationBridge = new FirebaseCommunicationBridge();
 
-    const responseHandler = (response) => {
+    const responseHandler = async ({key, value}) => {
+      const parsedResponse = JSON.parse(value);
+      const parserResponseType = parsedResponse.type;
+      const parsedResponseRequestUuid = parsedResponse.requestUuid;
+
       SystemEventsHandler.onInfo({
-        info: 'SurveillanceCommunicationManager->ON_RESPONSE: ' + response,
+        info:
+          'SurveillanceCommunicationManager->ON_RESPONSE: ' +
+          parserResponseType +
+          ' - ' +
+          parsedResponseRequestUuid,
+      });
+
+      if (this.#requestsUuidSet.has(parsedResponseRequestUuid)) {
+        this.#requestsUuidSet.delete(parsedResponseRequestUuid);
+        await this.#communicationBridge.removeResponse({responseKey: key});
+      }
+    };
+
+    const notificationHandler = ({key, value}) => {
+      SystemEventsHandler.onInfo({
+        info: 'SurveillanceCommunicationManager->ON_NOTIFICATION: ' + value,
       });
     };
 
     this.#communicationBridge.onResponse({handler: responseHandler});
+    this.#communicationBridge.onNotification({handler: notificationHandler});
   }
 
   async sendRequest({request}) {
-    SystemEventsHandler.onInfo({
-      info:
-        'SurveillanceCommunicationManager->sendRequest(): ' +
-        JSON.stringify(request),
-    });
+    if (!request) {
+      SystemEventsHandler.onError({
+        err: 'SurveillanceCommunicationManager->sendRequest(): EMPTY_REQUEST',
+      });
+      return;
+    }
 
-    // await this.#communicationBridge.sendRequest();
+    if (!request.type) {
+      SystemEventsHandler.onError({
+        err: 'SurveillanceCommunicationManager->sendRequest(): NO_REQUEST_TYPE',
+      });
+      return;
+    }
+
+    if (!request.uuid) {
+      SystemEventsHandler.onError({
+        err: 'SurveillanceCommunicationManager->sendRequest(): NO_REQUEST_UUID',
+      });
+      return;
+    }
+
+    this.#requestsUuidSet.add(request.uuid.toString());
+
+    await this.#communicationBridge.sendRequest({request});
   }
 }

@@ -36,7 +36,7 @@ export class FirebaseCommunicationBridge {
 
         this.#responsesNotifier.notify({
           event: this.#RESPONSE_EVENT,
-          data: responseValue,
+          data: {key: responseKey, value: responseValue},
         });
       });
     };
@@ -52,7 +52,7 @@ export class FirebaseCommunicationBridge {
 
         this.#notificationsNotifier.notify({
           event: this.#NOTIFICATION_EVENT,
-          data: notificationValue,
+          data: {key: notificationKey, value: notificationValue},
         });
       });
     };
@@ -67,6 +67,27 @@ export class FirebaseCommunicationBridge {
     SystemEventsHandler.onInfo({
       info: 'FirebaseCommunicationBridge->sendRequest()',
     });
+
+    const stringifiedRequest = JSON.stringify(request);
+
+    const requestRefKey = database().ref(this.#clientRequestPath).push().key;
+    await database()
+      .ref(this.#clientRequestPath + '/' + requestRefKey)
+      .set(stringifiedRequest);
+  }
+
+  async removeResponse({responseKey}) {
+    SystemEventsHandler.onInfo({
+      info: 'FirebaseCommunicationBridge->removeResponse(): ' + responseKey,
+    });
+
+    if (!responseKey) {
+      return;
+    }
+
+    await database()
+      .ref(this.#serverResponsePath + '/' + responseKey)
+      .set(null);
   }
 
   onResponse({handler}) {
