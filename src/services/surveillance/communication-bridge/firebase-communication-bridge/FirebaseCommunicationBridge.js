@@ -2,7 +2,6 @@ import database from '@react-native-firebase/database';
 import {SystemEventsHandler} from '../../../../utils/common/system-events-handler/SystemEventsHandler';
 import {FirebasePaths} from './firebase-paths/FirebasePaths';
 import 'react-native-get-random-values';
-import {v4 as uuidv4} from 'uuid';
 import {Notifier} from '../../../../utils/common/notifier/Notifier';
 
 export class FirebaseCommunicationBridge {
@@ -63,14 +62,21 @@ export class FirebaseCommunicationBridge {
       .on('value', serverNotificationHandler);
   }
 
-  async sendRequest({request}) {
+  getNewRequestKey() {
+    return database().ref(this.#clientRequestPath).push().key;
+  }
+
+  async sendRequest({request, requestKey}) {
     SystemEventsHandler.onInfo({
       info: 'FirebaseCommunicationBridge->sendRequest()',
     });
 
     const stringifiedRequest = JSON.stringify(request);
 
-    const requestRefKey = database().ref(this.#clientRequestPath).push().key;
+    const requestRefKey = requestKey
+      ? requestKey
+      : database().ref(this.#clientRequestPath).push().key;
+
     await database()
       .ref(this.#clientRequestPath + '/' + requestRefKey)
       .set(stringifiedRequest);
@@ -87,6 +93,20 @@ export class FirebaseCommunicationBridge {
 
     await database()
       .ref(this.#serverResponsePath + '/' + responseKey)
+      .set(null);
+  }
+
+  async removeRequest({requestKey}) {
+    SystemEventsHandler.onInfo({
+      info: 'FirebaseCommunicationBridge->removeRequest(): ' + requestKey,
+    });
+
+    if (!requestKey) {
+      return;
+    }
+
+    await database()
+      .ref(this.#clientRequestPath + '/' + requestKey)
       .set(null);
   }
 

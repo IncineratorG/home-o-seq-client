@@ -1,30 +1,40 @@
 import {SystemEventsHandler} from '../../../utils/common/system-events-handler/SystemEventsHandler';
 import {FirebaseCommunicationBridge} from '../communication-bridge/firebase-communication-bridge/FirebaseCommunicationBridge';
+import {RequestsManager} from '../requests-manager/RequestsManager';
 
 export class SurveillanceCommunicationManager {
   #communicationBridge;
+  #requestsManager;
   #requestsUuidSet = new Set();
 
   constructor() {
     this.#communicationBridge = new FirebaseCommunicationBridge();
+    this.#requestsManager = new RequestsManager({
+      communicationBridge: this.#communicationBridge,
+    });
 
     const responseHandler = async ({key, value}) => {
-      const parsedResponse = JSON.parse(value);
-      const parserResponseType = parsedResponse.type;
-      const parsedResponseRequestUuid = parsedResponse.requestUuid;
-
-      SystemEventsHandler.onInfo({
-        info:
-          'SurveillanceCommunicationManager->ON_RESPONSE: ' +
-          parserResponseType +
-          ' - ' +
-          parsedResponseRequestUuid,
+      this.#requestsManager.onResponse({
+        stringifiedResponse: value,
+        responseKey: key,
       });
 
-      if (this.#requestsUuidSet.has(parsedResponseRequestUuid)) {
-        this.#requestsUuidSet.delete(parsedResponseRequestUuid);
-        await this.#communicationBridge.removeResponse({responseKey: key});
-      }
+      // const parsedResponse = JSON.parse(value);
+      // const parserResponseType = parsedResponse.type;
+      // const parsedResponseRequestUuid = parsedResponse.requestUuid;
+      //
+      // SystemEventsHandler.onInfo({
+      //   info:
+      //     'SurveillanceCommunicationManager->ON_RESPONSE: ' +
+      //     parserResponseType +
+      //     ' - ' +
+      //     parsedResponseRequestUuid,
+      // });
+      //
+      // if (this.#requestsUuidSet.has(parsedResponseRequestUuid)) {
+      //   this.#requestsUuidSet.delete(parsedResponseRequestUuid);
+      //   await this.#communicationBridge.removeResponse({responseKey: key});
+      // }
     };
 
     const notificationHandler = ({key, value}) => {
@@ -37,7 +47,7 @@ export class SurveillanceCommunicationManager {
     this.#communicationBridge.onNotification({handler: notificationHandler});
   }
 
-  async sendRequest({request}) {
+  async sendRequest({request, onReceived, onCompleted, onError, onTimeout}) {
     if (!request) {
       SystemEventsHandler.onError({
         err: 'SurveillanceCommunicationManager->sendRequest(): EMPTY_REQUEST',
@@ -59,8 +69,24 @@ export class SurveillanceCommunicationManager {
       return;
     }
 
-    this.#requestsUuidSet.add(request.uuid.toString());
+    SystemEventsHandler.onInfo({info: 'sendRequest()'});
 
-    await this.#communicationBridge.sendRequest({request});
+    this.#requestsManager.addRequest({
+      request,
+      requestKey: null,
+      onReceived,
+      onCompleted,
+      onError,
+      onTimeout,
+    });
+
+    // ===
+    // const requestKey = this.#communicationBridge.getNewRequestKey();
+    // await this.#communicationBridge.sendRequest({request, requestKey});
+    // ===
+
+    // this.#requestsUuidSet.add(request.uuid.toString());
+    //
+    // await this.#communicationBridge.sendRequest({request});
   }
 }
