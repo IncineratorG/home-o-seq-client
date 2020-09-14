@@ -69,24 +69,19 @@ export class SurveillanceCommunicationManager {
       return;
     }
 
-    SystemEventsHandler.onInfo({info: 'sendRequest()'});
+    // SystemEventsHandler.onInfo({info: 'sendRequest()'});
+
+    const requestKey = this.#communicationBridge.getNewRequestKey();
 
     this.#requestsManager.addRequest({
       request,
-      requestKey: null,
+      requestKey,
       onReceived,
       onCompleted,
       onError,
       onTimeout,
     });
 
-    // ===
-    // const requestKey = this.#communicationBridge.getNewRequestKey();
-    // await this.#communicationBridge.sendRequest({request, requestKey});
-    // ===
-
-    // this.#requestsUuidSet.add(request.uuid.toString());
-    //
-    // await this.#communicationBridge.sendRequest({request});
+    await this.#communicationBridge.sendRequest({request, requestKey});
   }
 }

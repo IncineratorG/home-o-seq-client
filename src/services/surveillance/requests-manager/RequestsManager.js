@@ -1,7 +1,11 @@
+import {Responses} from '../responses/Responses';
+import {SystemEventsHandler} from '../../../utils/common/system-events-handler/SystemEventsHandler';
+
 export class RequestsManager {
   #communicationBridge;
   #requests = new Map();
   #timeouts = new Map();
+  #timeoutTime = 10000;
 
   constructor({communicationBridge}) {
     this.#communicationBridge = communicationBridge;
@@ -31,8 +35,11 @@ export class RequestsManager {
         requestObject.onTimeout();
       }
 
-      this.#requests.delete(request.uuid.toString());
-    }, 2000);
+      this.#requests.delete(requestObject.request.uuid.toString());
+      this.#timeouts.delete(requestObject.request.uuid.toString());
+
+      this.#communicationBridge.removeRequest({requestKey});
+    }, this.#timeoutTime);
 
     this.#timeouts.set(request.uuid.toString(), timeout);
   }
@@ -45,6 +52,43 @@ export class RequestsManager {
     if (this.#timeouts.has(parsedResponseRequestUuid)) {
       clearTimeout(this.#timeouts.get(parsedResponseRequestUuid));
       this.#timeouts.delete(parsedResponseRequestUuid);
+    }
+
+    const requestObject = this.#requests.get(parsedResponseRequestUuid);
+    if (!requestObject) {
+      SystemEventsHandler.onError({
+        err:
+          'RequestsManager->onResponse(): UNABLE_TO_FIND_CORRESPONDING_REQUEST: ' +
+          stringifiedResponse,
+      });
+      return;
+    }
+
+    switch (parserResponseType) {
+      case Responses.types.CONFIRM_RECEIVE: {
+        if (requestObject.onReceived) {
+          requestObject.onReceived();
+        }
+        break;
+      }
+
+      case Responses.types.REQUEST_RESULT: {
+        SystemEventsHandler.onInfo({
+          info: 'RequestsManager->onResponse(): RESULT: ' + stringifiedResponse,
+        });
+
+        this.#requests.delete(parsedResponseRequestUuid);
+
+        break;
+      }
+
+      default: {
+        SystemEventsHandler.onError({
+          err:
+            'RequestsManager->onResponse(): UNKNOWN_RESPONSE: ' +
+            parserResponseType,
+        });
+      }
     }
   }
 }
