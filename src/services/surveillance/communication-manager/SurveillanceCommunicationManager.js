@@ -14,27 +14,10 @@ export class SurveillanceCommunicationManager {
     });
 
     const responseHandler = async ({key, value}) => {
-      this.#requestsManager.onResponse({
+      await this.#requestsManager.onResponse({
         stringifiedResponse: value,
         responseKey: key,
       });
-
-      // const parsedResponse = JSON.parse(value);
-      // const parserResponseType = parsedResponse.type;
-      // const parsedResponseRequestUuid = parsedResponse.requestUuid;
-      //
-      // SystemEventsHandler.onInfo({
-      //   info:
-      //     'SurveillanceCommunicationManager->ON_RESPONSE: ' +
-      //     parserResponseType +
-      //     ' - ' +
-      //     parsedResponseRequestUuid,
-      // });
-      //
-      // if (this.#requestsUuidSet.has(parsedResponseRequestUuid)) {
-      //   this.#requestsUuidSet.delete(parsedResponseRequestUuid);
-      //   await this.#communicationBridge.removeResponse({responseKey: key});
-      // }
     };
 
     const notificationHandler = ({key, value}) => {

@@ -3,6 +3,7 @@ import {SurveillanceCommunicationManager} from './communication-manager/Surveill
 import {SystemEventsHandler} from '../../utils/common/system-events-handler/SystemEventsHandler';
 import {Requests} from './requests/Requests';
 import SurveillanceServiceEvents from './data/event-types/SurveillanceServiceEvents';
+import {Responses} from './responses/Responses';
 
 export class SurveillanceService {
   static #notifier = new Notifier();
@@ -42,15 +43,15 @@ export class SurveillanceService {
       });
     };
 
-    const onCompleted = ({status}) => {
+    const onCompleted = (data) => {
       SurveillanceService.#notifier.notify({
         event:
           SurveillanceServiceEvents.GET_SURVEILLANCE_STATUS_REQUEST_COMPLETED,
-        data: {status},
+        data: Responses.getSurveillanceStatusResponse(data),
       });
     };
 
-    const onError = ({error}) => {
+    const onError = (error) => {
       SurveillanceService.#notifier.notify({
         event: SurveillanceServiceEvents.GET_SURVEILLANCE_STATUS_REQUEST_ERROR,
         data: {error},

@@ -44,9 +44,9 @@ export class RequestsManager {
     this.#timeouts.set(request.uuid.toString(), timeout);
   }
 
-  onResponse({stringifiedResponse, responseKey}) {
+  async onResponse({stringifiedResponse, responseKey}) {
     const parsedResponse = JSON.parse(stringifiedResponse);
-    const parserResponseType = parsedResponse.type;
+    const parsedResponseType = parsedResponse.type;
     const parsedResponseRequestUuid = parsedResponse.requestUuid;
 
     if (this.#timeouts.has(parsedResponseRequestUuid)) {
@@ -64,7 +64,7 @@ export class RequestsManager {
       return;
     }
 
-    switch (parserResponseType) {
+    switch (parsedResponseType) {
       case Responses.types.CONFIRM_RECEIVE: {
         if (requestObject.onReceived) {
           requestObject.onReceived();
@@ -73,9 +73,12 @@ export class RequestsManager {
       }
 
       case Responses.types.REQUEST_RESULT: {
-        SystemEventsHandler.onInfo({
-          info: 'RequestsManager->onResponse(): RESULT: ' + stringifiedResponse,
-        });
+        const stringifiedPayload = parsedResponse.stringifiedPayload;
+        const payload = JSON.parse(stringifiedPayload);
+
+        if (requestObject.onCompleted) {
+          requestObject.onCompleted(payload);
+        }
 
         this.#requests.delete(parsedResponseRequestUuid);
 
@@ -86,9 +89,11 @@ export class RequestsManager {
         SystemEventsHandler.onError({
           err:
             'RequestsManager->onResponse(): UNKNOWN_RESPONSE: ' +
-            parserResponseType,
+            parsedResponseType,
         });
       }
     }
+
+    await this.#communicationBridge.removeResponse({responseKey});
   }
 }

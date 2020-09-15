@@ -12,7 +12,7 @@ function s_createGetSurveillanceStatusChannel() {
       });
     };
 
-    const completedHandler = ({status}) => {
+    const completedHandler = (status) => {
       SystemEventsHandler.onInfo({
         info:
           's_createGetSurveillanceStatusChannel()->completedHandler: ' +
