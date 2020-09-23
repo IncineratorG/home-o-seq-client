@@ -85,6 +85,19 @@ export class RequestsManager {
         break;
       }
 
+      case Responses.types.ERROR: {
+        const stringifiedPayload = parsedResponse.stringifiedPayload;
+        const payload = JSON.parse(stringifiedPayload);
+
+        if (requestObject.onError) {
+          requestObject.onError(payload);
+        }
+
+        this.#requests.delete(parsedResponseRequestUuid);
+
+        break;
+      }
+
       default: {
         SystemEventsHandler.onError({
           err:

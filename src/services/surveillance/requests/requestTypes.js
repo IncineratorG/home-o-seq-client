@@ -1,1 +1,2 @@
+export const IS_ALIVE = 'IS_ALIVE';
 export const GET_SURVEILLANCE_STATUS = 'GET_SURVEILLANCE_STATUS';

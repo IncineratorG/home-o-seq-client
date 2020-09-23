@@ -1,11 +1,11 @@
 import {call, put, take, takeLatest} from '@redux-saga/core/effects';
-import {SystemEventsHandler} from '../../../utils/common/system-events-handler/SystemEventsHandler';
-import s_createGetSurveillanceStatusChannel from './event-channels/s_createGetSurveillanceStatusChannel';
+import {SystemEventsHandler} from '../../../../../utils/common/system-events-handler/SystemEventsHandler';
+import createGetSurveillanceStatusChannel from './createGetSurveillanceStatusChannel';
 
 function* getSurveillanceStatusEventsSaga() {
   SystemEventsHandler.onInfo({info: 'getSurveillanceStatusEventsSaga()'});
 
-  const channel = yield call(s_createGetSurveillanceStatusChannel);
+  const channel = yield call(createGetSurveillanceStatusChannel);
 
   while (true) {
     const action = yield take(channel);

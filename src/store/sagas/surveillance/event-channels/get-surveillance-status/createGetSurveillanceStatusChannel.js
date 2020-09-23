@@ -1,36 +1,36 @@
 import {call, put, take} from '@redux-saga/core/effects';
 import {eventChannel} from 'redux-saga';
-import {SystemEventsHandler} from '../../../../utils/common/system-events-handler/SystemEventsHandler';
-import Services from '../../../../services/Services';
-import SurveillanceServiceEvents from '../../../../services/surveillance/data/event-types/SurveillanceServiceEvents';
+import {SystemEventsHandler} from '../../../../../utils/common/system-events-handler/SystemEventsHandler';
+import Services from '../../../../../services/Services';
+import SurveillanceServiceEvents from '../../../../../services/surveillance/data/event-types/SurveillanceServiceEvents';
 
-function s_createGetSurveillanceStatusChannel() {
+function createGetSurveillanceStatusChannel() {
   return eventChannel((emit) => {
     const receivedHandler = () => {
       SystemEventsHandler.onInfo({
-        info: 's_createGetSurveillanceStatusChannel()->receivedHandler',
+        info: 'createGetSurveillanceStatusChannel()->receivedHandler',
       });
     };
 
     const completedHandler = (status) => {
       SystemEventsHandler.onInfo({
         info:
-          's_createGetSurveillanceStatusChannel()->completedHandler: ' +
+          'createGetSurveillanceStatusChannel()->completedHandler: ' +
           JSON.stringify(status),
       });
     };
 
-    const errorHandler = ({error}) => {
+    const errorHandler = (error) => {
       SystemEventsHandler.onInfo({
         info:
-          's_createGetSurveillanceStatusChannel()->errorHandler: ' +
+          'createGetSurveillanceStatusChannel()->errorHandler: ' +
           JSON.stringify(error),
       });
     };
 
     const timeoutHandler = () => {
       SystemEventsHandler.onInfo({
-        info: 's_createGetSurveillanceStatusChannel()->timeoutHandler',
+        info: 'createGetSurveillanceStatusChannel()->timeoutHandler',
       });
     };
 
@@ -68,4 +68,4 @@ function s_createGetSurveillanceStatusChannel() {
   });
 }
 
-export default s_createGetSurveillanceStatusChannel;
+export default createGetSurveillanceStatusChannel;

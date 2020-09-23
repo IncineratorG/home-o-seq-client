@@ -17,19 +17,26 @@ export class SurveillanceService {
     this.#communicationManager = new SurveillanceCommunicationManager();
   }
 
-  static async sendTestMessage() {
-    // SystemEventsHandler.onInfo({
-    //   info: 'SurveillanceService->sendTestMessage()',
-    // });
-    // await SurveillanceService.#communicationManager.sendRequest();
-  }
+  static async runLongRunningTask() {}
 
-  static async runLongRunningTask() {
-    // const request = {
-    //   uuid: uuidv4(),
-    //   type: 'RUN_LONG_RUNNING_TASK',
-    // };
-    // await SurveillanceService.#communicationManager.sendRequest({request});
+  static async isServerAlive() {
+    const {
+      request,
+      onReceived,
+      onCompleted,
+      onError,
+      onTimeout,
+    } = Requests.isAliveRequest({
+      serviceNotifier: SurveillanceService.#notifier,
+    });
+
+    await SurveillanceService.#communicationManager.sendRequest({
+      request,
+      onReceived,
+      onCompleted,
+      onError,
+      onTimeout,
+    });
   }
 
   static async getSurveillanceStatus() {
