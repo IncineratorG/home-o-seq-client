@@ -11,6 +11,18 @@ export class Responses {
     };
   }
 
+  static getAllCamerasResponse(data) {
+    return {
+      cameras: data.cameras,
+    };
+  }
+
+  static getCameraImageResponse(data) {
+    return {
+      image: data.image,
+    };
+  }
+
   static getSurveillanceStatusResponse(data) {
     return {
       timestamp: data.timestamp,

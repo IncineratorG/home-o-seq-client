@@ -1,5 +1,6 @@
 import {SystemEventsHandler} from '../../../utils/common/system-events-handler/SystemEventsHandler';
 import {
+  getAllCamerasAction,
   getSurveillanceStatusAction,
   isServerAliveAction,
   sendTestMessageAction,
@@ -9,7 +10,7 @@ export const mainViewController = (model) => {
   const sendTestMessageHandler = () => {
     SystemEventsHandler.onInfo({info: 'sendTestMessageHandler()'});
 
-    model.dispatch(isServerAliveAction());
+    model.dispatch(getAllCamerasAction());
   };
 
   return {

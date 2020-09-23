@@ -3,12 +3,14 @@ import {SystemEventsHandler} from '../../utils/common/system-events-handler/Syst
 import surveillanceSaga from './surveillance/surveillanceSaga';
 import getSurveillanceStatusEventsSaga from './surveillance/event-channels/get-surveillance-status/getSurveillanceStatusEventsSaga';
 import isServerAliveEventsSaga from './surveillance/event-channels/is-server-alive/isServerAliveEventsSaga';
+import getAllCamerasEventsSaga from './surveillance/event-channels/get-all-cameras/getAllCamerasEventsSaga';
 
 function* rootSaga() {
   const sagas = [
     surveillanceSaga,
     getSurveillanceStatusEventsSaga,
     isServerAliveEventsSaga,
+    getAllCamerasEventsSaga,
   ];
 
   yield all(

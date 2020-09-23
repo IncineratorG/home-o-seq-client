@@ -39,6 +39,47 @@ export class SurveillanceService {
     });
   }
 
+  static async getAllCameras() {
+    const {
+      request,
+      onReceived,
+      onCompleted,
+      onError,
+      onTimeout,
+    } = Requests.getAllCamerasRequest({
+      serviceNotifier: SurveillanceService.#notifier,
+    });
+
+    await SurveillanceService.#communicationManager.sendRequest({
+      request,
+      onReceived,
+      onCompleted,
+      onError,
+      onTimeout,
+    });
+  }
+
+  static async getCameraImage({cameraId}) {
+    const {
+      request,
+      onReceived,
+      onCompleted,
+      onError,
+      onTimeout,
+    } = Requests.getCameraImageRequest({
+      serviceNotifier: SurveillanceService.#notifier,
+      cameraId,
+    });
+
+    await SurveillanceService.#communicationManager.sendRequest({
+      request,
+      onReceived,
+      onCompleted,
+      onError,
+      onTimeout,
+    });
+  }
+
   static async getSurveillanceStatus() {
     const request = Requests.getSurveillanceStatusRequest();
 
