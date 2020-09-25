@@ -3,6 +3,12 @@ import {eventChannel} from 'redux-saga';
 import {SystemEventsHandler} from '../../../../../utils/common/system-events-handler/SystemEventsHandler';
 import Services from '../../../../../services/Services';
 import SurveillanceServiceEvents from '../../../../../services/surveillance/data/event-types/SurveillanceServiceEvents';
+import {
+  getCameraImageCompletedAction,
+  getCameraImageErrorAction,
+  getCameraImageReceivedAction,
+  getCameraImageTimeoutAction,
+} from '../../../../actions/surveillance/surveillanceActions';
 
 function createGetCameraImageChannel() {
   return eventChannel((emit) => {
@@ -10,19 +16,21 @@ function createGetCameraImageChannel() {
       SystemEventsHandler.onInfo({
         info: 'createGetCameraImageChannel()->receivedHandler',
       });
+
+      emit(getCameraImageReceivedAction());
     };
 
     const completedHandler = (data) => {
       SystemEventsHandler.onInfo({
-        info:
-          'createGetCameraImageChannel()->completedHandler: ' +
-          JSON.stringify(data),
+        info: 'createGetCameraImageChannel()->completedHandler',
       });
 
-      const {cameraId, image} = data;
-      SystemEventsHandler.onInfo({
-        info: cameraId + ' - ' + ' - ' + (image === null),
-      });
+      const {cameraId, serializedImage} = data;
+      // SystemEventsHandler.onInfo({
+      //   info: cameraId + ' - ' + ' - ' + (image === null),
+      // });
+
+      emit(getCameraImageCompletedAction({cameraId, serializedImage}));
     };
 
     const errorHandler = (error) => {
@@ -31,12 +39,16 @@ function createGetCameraImageChannel() {
           'createGetCameraImageChannel()->errorHandler: ' +
           JSON.stringify(error),
       });
+
+      emit(getCameraImageErrorAction(error));
     };
 
     const timeoutHandler = () => {
       SystemEventsHandler.onInfo({
         info: 'createGetCameraImageChannel()->timeoutHandler',
       });
+
+      emit(getCameraImageTimeoutAction());
     };
 
     const surveillanceService = Services.get(

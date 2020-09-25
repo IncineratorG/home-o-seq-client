@@ -1,6 +1,11 @@
 import {
   GET_ALL_CAMERAS,
   GET_CAMERA_IMAGE,
+  GET_CAMERA_IMAGE_BEGIN,
+  GET_CAMERA_IMAGE_COMPLETED,
+  GET_CAMERA_IMAGE_ERROR,
+  GET_CAMERA_IMAGE_RECEIVED,
+  GET_CAMERA_IMAGE_TIMEOUT,
   GET_SURVEILLANCE_STATUS,
   IS_SERVER_ALIVE,
   SEND_TEST_MESSAGE,
@@ -20,10 +25,45 @@ export const getAllCamerasAction = () => {
   };
 };
 
-export const getCameraImage = ({cameraId}) => {
+export const getCameraImageAction = ({cameraId}) => {
   return {
     type: GET_CAMERA_IMAGE,
     payload: {cameraId},
+  };
+};
+
+export const getCameraImageBeginAction = () => {
+  return {
+    type: GET_CAMERA_IMAGE_BEGIN,
+    payload: undefined,
+  };
+};
+
+export const getCameraImageReceivedAction = () => {
+  return {
+    type: GET_CAMERA_IMAGE_RECEIVED,
+    payload: undefined,
+  };
+};
+
+export const getCameraImageCompletedAction = ({cameraId, serializedImage}) => {
+  return {
+    type: GET_CAMERA_IMAGE_COMPLETED,
+    payload: {cameraId, serializedImage},
+  };
+};
+
+export const getCameraImageTimeoutAction = () => {
+  return {
+    type: GET_CAMERA_IMAGE_TIMEOUT,
+    payload: undefined,
+  };
+};
+
+export const getCameraImageErrorAction = (error) => {
+  return {
+    type: GET_CAMERA_IMAGE_ERROR,
+    payload: {error},
   };
 };
 

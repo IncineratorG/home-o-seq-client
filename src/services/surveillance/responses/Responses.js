@@ -21,7 +21,7 @@ export class Responses {
     return {
       cameraId: data.id,
       // cameraName: data.name,
-      // serializedImage: data.serializedImage,
+      serializedImage: data.serializedImage,
     };
   }
 

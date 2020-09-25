@@ -3,7 +3,7 @@ import {eventChannel} from 'redux-saga';
 import {SystemEventsHandler} from '../../../../../utils/common/system-events-handler/SystemEventsHandler';
 import Services from '../../../../../services/Services';
 import SurveillanceServiceEvents from '../../../../../services/surveillance/data/event-types/SurveillanceServiceEvents';
-import {getCameraImage} from '../../../../actions/surveillance/surveillanceActions';
+import {getCameraImageAction} from '../../../../actions/surveillance/surveillanceActions';
 
 function createGetAllCamerasChannel() {
   return eventChannel((emit) => {
@@ -36,7 +36,7 @@ function createGetAllCamerasChannel() {
       });
       SystemEventsHandler.onInfo({info: ''});
 
-      emit(getCameraImage({cameraId: firstCamera.id}));
+      emit(getCameraImageAction({cameraId: firstCamera.id}));
 
       // const cameras = data.cameras;
       // SystemEventsHandler.onInfo({info: cameras.length});

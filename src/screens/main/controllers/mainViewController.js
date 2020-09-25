@@ -1,7 +1,7 @@
 import {SystemEventsHandler} from '../../../utils/common/system-events-handler/SystemEventsHandler';
 import {
   getAllCamerasAction,
-  getCameraImage,
+  getCameraImageAction,
   getSurveillanceStatusAction,
   isServerAliveAction,
   sendTestMessageAction,
