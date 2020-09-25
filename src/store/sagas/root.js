@@ -5,14 +5,16 @@ import getSurveillanceStatusEventsSaga from './surveillance/event-channels/get-s
 import isServerAliveEventsSaga from './surveillance/event-channels/is-server-alive/isServerAliveEventsSaga';
 import getAllCamerasEventsSaga from './surveillance/event-channels/get-all-cameras/getAllCamerasEventsSaga';
 import getCameraImageEventsSaga from './surveillance/event-channels/get-camera-image/getCameraImageEventsSaga';
+import apartmentStatusSaga from './apartment-status/apartmentStatusSaga';
 
 function* rootSaga() {
   const sagas = [
-    surveillanceSaga,
-    getSurveillanceStatusEventsSaga,
-    isServerAliveEventsSaga,
-    getAllCamerasEventsSaga,
-    getCameraImageEventsSaga,
+    apartmentStatusSaga,
+    // surveillanceSaga,
+    // getSurveillanceStatusEventsSaga,
+    // isServerAliveEventsSaga,
+    // getAllCamerasEventsSaga,
+    // getCameraImageEventsSaga,
   ];
 
   yield all(
