@@ -6,10 +6,12 @@ import isServerAliveEventsSaga from './surveillance/event-channels/is-server-ali
 import getAllCamerasEventsSaga from './surveillance/event-channels/get-all-cameras/getAllCamerasEventsSaga';
 import getCameraImageEventsSaga from './surveillance/event-channels/get-camera-image/getCameraImageEventsSaga';
 import apartmentStatusSaga from './apartment-status/apartmentStatusSaga';
+import apartmentStatusEventsSaga from './apartment-status/apartmentStatusEventsSaga';
 
 function* rootSaga() {
   const sagas = [
     apartmentStatusSaga,
+    apartmentStatusEventsSaga,
     // surveillanceSaga,
     // getSurveillanceStatusEventsSaga,
     // isServerAliveEventsSaga,
