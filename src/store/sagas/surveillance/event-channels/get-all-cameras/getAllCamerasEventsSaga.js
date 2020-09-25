@@ -9,7 +9,7 @@ function* getAllCamerasEventsSaga() {
 
   while (true) {
     const action = yield take(channel);
-    // yield put(action);
+    yield put(action);
   }
 }
 

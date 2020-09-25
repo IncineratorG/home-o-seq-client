@@ -106,7 +106,7 @@ export class Requests {
 
     const onCompleted = (data) => {
       serviceNotifier.notify({
-        event: SurveillanceServiceEvents.GET_CAMERA_IMAGE_REQUEST_RECEIVED,
+        event: SurveillanceServiceEvents.GET_CAMERA_IMAGE_REQUEST_COMPLETED,
         data: Responses.getCameraImageResponse(data),
       });
     };

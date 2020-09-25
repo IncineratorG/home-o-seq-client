@@ -19,7 +19,9 @@ export class Responses {
 
   static getCameraImageResponse(data) {
     return {
-      image: data.image,
+      cameraId: data.id,
+      // cameraName: data.name,
+      // serializedImage: data.serializedImage,
     };
   }
 

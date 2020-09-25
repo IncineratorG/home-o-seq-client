@@ -9,6 +9,17 @@ export const mainViewStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
+  imageContainer: {
+    flex: 1,
+    backgroundColor: 'lightgrey',
+    margin: 8,
+  },
+  image: {
+    width: '100%',
+    height: undefined,
+    aspectRatio: 1,
+    resizeMode: 'contain',
+  },
   buttonsContainer: {
     backgroundColor: 'red',
     height: 50,
