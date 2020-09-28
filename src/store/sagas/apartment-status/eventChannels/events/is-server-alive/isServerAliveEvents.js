@@ -1,31 +1,28 @@
 import {SystemEventsHandler} from '../../../../../../utils/common/system-events-handler/SystemEventsHandler';
 import Services from '../../../../../../services/Services';
 import SurveillanceServiceEvents from '../../../../../../services/surveillance/data/event-types/SurveillanceServiceEvents';
+import {
+  isServerAliveCompletedAction,
+  isServerAliveErrorAction,
+  isServerAliveReceivedAction,
+  isServerAliveTimeoutAction,
+} from '../../../../../actions/apartment-status/apartmentStatusActions';
 
 const isServerAliveEvents = (emit) => {
   const receivedHandler = () => {
-    SystemEventsHandler.onInfo({
-      info: 'isServerAliveEvents()->receivedHandler',
-    });
+    emit(isServerAliveReceivedAction());
   };
 
-  const completedHandler = (status) => {
-    SystemEventsHandler.onInfo({
-      info:
-        'isServerAliveEvents()->completedHandler: ' + JSON.stringify(status),
-    });
+  const completedHandler = ({isAlive}) => {
+    emit(isServerAliveCompletedAction({isAlive}));
   };
 
-  const errorHandler = (error) => {
-    SystemEventsHandler.onInfo({
-      info: 'isServerAliveEvents()->errorHandler: ' + JSON.stringify(error),
-    });
+  const errorHandler = ({code, description}) => {
+    emit(isServerAliveErrorAction({code, description}));
   };
 
   const timeoutHandler = () => {
-    SystemEventsHandler.onInfo({
-      info: 'isServerAliveEvents()->timeoutHandler',
-    });
+    emit(isServerAliveTimeoutAction());
   };
 
   const surveillanceService = Services.get(Services.serviceTypes.SURVEILLANCE);

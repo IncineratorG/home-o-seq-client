@@ -1,9 +1,12 @@
-import {call} from '@redux-saga/core/effects';
+import {call, put} from '@redux-saga/core/effects';
 import {SystemEventsHandler} from '../../../../utils/common/system-events-handler/SystemEventsHandler';
 import Services from '../../../../services/Services';
+import {isServerAliveBeginAction} from '../../../actions/apartment-status/apartmentStatusActions';
 
 function* as_isServerAliveHandler(action) {
   SystemEventsHandler.onInfo({info: 'as_isServerAliveHandler()'});
+
+  yield put(isServerAliveBeginAction());
 
   try {
     const systemService = Services.get(Services.serviceTypes.SURVEILLANCE);

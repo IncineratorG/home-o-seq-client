@@ -28,7 +28,7 @@ export class Requests {
     const onError = (error) => {
       serviceNotifier.notify({
         event: SurveillanceServiceEvents.IS_ALIVE_REQUEST_ERROR,
-        data: error,
+        data: Responses.errorResponse(error),
       });
     };
 
@@ -71,7 +71,7 @@ export class Requests {
     const onError = (error) => {
       serviceNotifier.notify({
         event: SurveillanceServiceEvents.GET_ALL_CAMERAS_REQUEST_ERROR,
-        data: error,
+        data: Responses.errorResponse(error),
       });
     };
 
@@ -114,7 +114,7 @@ export class Requests {
     const onError = (error) => {
       serviceNotifier.notify({
         event: SurveillanceServiceEvents.GET_CAMERA_IMAGE_REQUEST_ERROR,
-        data: error,
+        data: Responses.errorResponse(error),
       });
     };
 

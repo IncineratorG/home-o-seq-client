@@ -5,6 +5,13 @@ export class Responses {
     ERROR: 'ERROR_MESSAGE',
   };
 
+  static errorResponse(error) {
+    return {
+      code: error.code,
+      description: error.description,
+    };
+  }
+
   static isAliveResponse(data) {
     return {
       isAlive: data,

@@ -38,9 +38,9 @@ export const isServerAliveTimeoutAction = () => {
   };
 };
 
-export const isServerAliveErrorAction = ({error}) => {
+export const isServerAliveErrorAction = ({code, description}) => {
   return {
     type: IS_SERVER_ALIVE_ERROR,
-    payload: {error},
+    payload: {error: {code, description}},
   };
 };
