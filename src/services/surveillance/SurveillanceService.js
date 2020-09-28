@@ -39,6 +39,26 @@ export class SurveillanceService {
     });
   }
 
+  static async getApartmentStatus() {
+    const {
+      request,
+      onReceived,
+      onCompleted,
+      onError,
+      onTimeout,
+    } = Requests.getApartmentStatusRequest({
+      serviceNotifier: SurveillanceService.#notifier,
+    });
+
+    await SurveillanceService.#communicationManager.sendRequest({
+      request,
+      onReceived,
+      onCompleted,
+      onError,
+      onTimeout,
+    });
+  }
+
   static async getAllCameras() {
     const {
       request,

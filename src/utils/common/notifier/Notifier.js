@@ -1,3 +1,5 @@
+import {SystemEventsHandler} from '../system-events-handler/SystemEventsHandler';
+
 export class Notifier {
   #idsCounter = 0;
   #subscriptions = [];

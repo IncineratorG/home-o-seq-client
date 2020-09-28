@@ -18,16 +18,22 @@ export class Responses {
     };
   }
 
-  static getAllCamerasResponse(data) {
+  static getApartmentStatusResponse(data) {
     return {
       cameras: data.cameras,
+      isAlive: data.isAlive,
+    };
+  }
+
+  static getAllCamerasResponse(data) {
+    return {
+      cameras: data,
     };
   }
 
   static getCameraImageResponse(data) {
     return {
       cameraId: data.id,
-      // cameraName: data.name,
       serializedImage: data.serializedImage,
     };
   }

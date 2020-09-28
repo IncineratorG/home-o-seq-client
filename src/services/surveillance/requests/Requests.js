@@ -2,12 +2,14 @@ import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
 import {
   GET_ALL_CAMERAS_REQUEST,
+  GET_APARTMENT_STATUS_REQUEST,
   GET_CAMERA_IMAGE_REQUEST,
   GET_SURVEILLANCE_STATUS,
   IS_ALIVE_REQUEST,
 } from './requestTypes';
 import SurveillanceServiceEvents from '../data/event-types/SurveillanceServiceEvents';
 import {Responses} from '../responses/Responses';
+import {SystemEventsHandler} from '../../../utils/common/system-events-handler/SystemEventsHandler';
 
 export class Requests {
   static isAliveRequest({serviceNotifier}) {
@@ -42,6 +44,49 @@ export class Requests {
     const request = {
       uuid: uuidv4(),
       type: IS_ALIVE_REQUEST,
+    };
+
+    return {
+      request,
+      onReceived,
+      onCompleted,
+      onError,
+      onTimeout,
+    };
+  }
+
+  static getApartmentStatusRequest({serviceNotifier}) {
+    const onReceived = () => {
+      serviceNotifier.notify({
+        event: SurveillanceServiceEvents.GET_APARTMENT_STATUS_RECEIVED,
+        data: {},
+      });
+    };
+
+    const onCompleted = (data) => {
+      serviceNotifier.notify({
+        event: SurveillanceServiceEvents.GET_APARTMENT_STATUS_COMPLETED,
+        data: Responses.getApartmentStatusResponse(data),
+      });
+    };
+
+    const onError = (error) => {
+      serviceNotifier.notify({
+        event: SurveillanceServiceEvents.GET_APARTMENT_STATUS_ERROR,
+        data: Responses.errorResponse(error),
+      });
+    };
+
+    const onTimeout = () => {
+      serviceNotifier.notify({
+        event: SurveillanceServiceEvents.GET_APARTMENT_STATUS_TIMEOUT,
+        data: {},
+      });
+    };
+
+    const request = {
+      uuid: uuidv4(),
+      type: GET_APARTMENT_STATUS_REQUEST,
     };
 
     return {

@@ -1,15 +1,15 @@
-import {call, put, take} from '@redux-saga/core/effects';
 import {eventChannel} from 'redux-saga';
 import isServerAliveEvents from './events/is-server-alive/isServerAliveEvents';
+import getApartmentStatusEvents from './events/get-apartment-status/getApartmentStatusEvents';
 
 function createApartmentStatusEventsChannel() {
   return eventChannel((emit) => {
-    return () => {
-      const isServerAliveUnsubscribe = isServerAliveEvents(emit);
+    const isServerAliveUnsubscribe = isServerAliveEvents(emit);
+    const getApartmentStatusUnsubscribe = getApartmentStatusEvents(emit);
 
-      return () => {
-        isServerAliveUnsubscribe();
-      };
+    return () => {
+      isServerAliveUnsubscribe();
+      getApartmentStatusUnsubscribe();
     };
   });
 }

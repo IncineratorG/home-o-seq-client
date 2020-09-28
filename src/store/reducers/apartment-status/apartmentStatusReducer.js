@@ -1,4 +1,9 @@
 import {
+  GET_APARTMENT_STATUS_BEGIN,
+  GET_APARTMENT_STATUS_COMPLETED,
+  GET_APARTMENT_STATUS_ERROR,
+  GET_APARTMENT_STATUS_RECEIVED,
+  GET_APARTMENT_STATUS_TIMEOUT,
   IS_SERVER_ALIVE_BEGIN,
   IS_SERVER_ALIVE_COMPLETED,
   IS_SERVER_ALIVE_ERROR,
@@ -54,6 +59,57 @@ export const apartmentStatusReducer = (state = initialState, action) => {
       SystemEventsHandler.onInfo({
         info:
           'apartmentStatusReducer->IS_SERVER_ALIVE_ERROR: ' +
+          errorCode +
+          ' - ' +
+          errorDescription,
+      });
+
+      return state;
+    }
+
+    case GET_APARTMENT_STATUS_BEGIN: {
+      SystemEventsHandler.onInfo({
+        info: 'apartmentStatusReducer->GET_APARTMENT_STATUS_BEGIN: ',
+      });
+
+      return state;
+    }
+
+    case GET_APARTMENT_STATUS_RECEIVED: {
+      SystemEventsHandler.onInfo({
+        info: 'apartmentStatusReducer->GET_APARTMENT_STATUS_RECEIVED: ',
+      });
+
+      return state;
+    }
+
+    case GET_APARTMENT_STATUS_COMPLETED: {
+      const cameras = action.payload.cameras;
+
+      SystemEventsHandler.onInfo({
+        info:
+          'apartmentStatusReducer->GET_APARTMENT_STATUS_COMPLETED: ' +
+          cameras.length,
+      });
+
+      return state;
+    }
+
+    case GET_APARTMENT_STATUS_TIMEOUT: {
+      SystemEventsHandler.onInfo({
+        info: 'apartmentStatusReducer->GET_APARTMENT_STATUS_TIMEOUT: ',
+      });
+
+      return state;
+    }
+
+    case GET_APARTMENT_STATUS_ERROR: {
+      const errorCode = action.payload.error.code;
+      const errorDescription = action.payload.error.description;
+
+      SystemEventsHandler.onInfo({
+        info:
+          'apartmentStatusReducer->GET_APARTMENT_STATUS_ERROR: ' +
           errorCode +
           ' - ' +
           errorDescription,
